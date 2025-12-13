@@ -3,19 +3,26 @@ package org.dristmine.smartRejoin;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
+import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerEventHandler {
 
     private final SmartRejoin plugin;
 
+    private final Map<UUID, String> lastServerMap = new ConcurrentHashMap<>();
+
     public PlayerEventHandler(SmartRejoin plugin) {
         this.plugin = plugin;
     }
+
 
     /**
      * Fired when a player disconnects from the proxy.
@@ -24,10 +31,14 @@ public class PlayerEventHandler {
     @Subscribe
     public void onDisconnect(DisconnectEvent event) {
         Player player = event.getPlayer();
-        player.getCurrentServer().ifPresent(serverConnection -> {
-            String serverName = serverConnection.getServerInfo().getName();
-            plugin.getPlayerDataManager().setLastServer(player.getUniqueId(), serverName);
-        });
+        String serverName = lastServerMap.remove(player.getUniqueId());
+        plugin.getPlayerDataManager().setLastServer(player.getUniqueId(), serverName);
+    }
+
+    @Subscribe
+    public void onServerConnected(ServerConnectedEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
+        lastServerMap.put(uuid, event.getServer().getServerInfo().getName());
     }
 
     /**
