@@ -32,6 +32,9 @@ public class PlayerEventHandler {
     public void onDisconnect(DisconnectEvent event) {
         Player player = event.getPlayer();
         String serverName = lastServerMap.remove(player.getUniqueId());
+        if (serverName == null) {
+            return;
+        }
         plugin.getPlayerDataManager().setLastServer(player.getUniqueId(), serverName);
     }
 
