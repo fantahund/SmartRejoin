@@ -31,10 +31,10 @@ public class PlayerEventHandler {
     @Subscribe
     public void onDisconnect(DisconnectEvent event) {
         Player player = event.getPlayer();
-        String serverName = lastServerMap.remove(player.getUniqueId());
-        if (serverName == null) {
+        if (!lastServerMap.containsKey(player.getUniqueId())) {
             return;
         }
+        String serverName = lastServerMap.remove(player.getUniqueId());
         plugin.getPlayerDataManager().setLastServer(player.getUniqueId(), serverName);
     }
 
