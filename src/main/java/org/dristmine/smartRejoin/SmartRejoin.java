@@ -5,20 +5,12 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
-import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
 
-@Plugin(
-        id = "smartrejoin",
-        name = "SmartRejoin",
-        version = "1.0.0",
-        description = "Smartly reconnects players to servers based on their last location.",
-        authors = {"Gemini"}
-)
 public class SmartRejoin {
 
     private final ProxyServer server;
